@@ -1,0 +1,53 @@
+package com.abc.boardver52.model.controller;
+
+import com.abc.boardver52.model.dto.BoardDTO;
+import com.abc.boardver52.model.dto.CommentDTO;
+import com.abc.boardver52.service.BoardService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+@Controller
+@RequestMapping("/comment")
+public class CommentController {
+    private final BoardService boardService;
+    public CommentController(BoardService boardService) {
+        this.boardService = boardService;
+    }
+    /*comment추가*/
+    @GetMapping("/add/{postId}")
+    public String showCommentAddForm(@PathVariable int postId, Model model) {
+        List<BoardDTO> boardDTOS = boardService.findAllBoards();
+        model.addAttribute("boardlist", boardDTOS);
+
+        model.addAttribute("postId", postId);
+        return "commentAdd";
+    }
+    @PostMapping("/add/{postId}")
+    public String handleCommentAdd(@PathVariable int postId,
+                                   @ModelAttribute CommentDTO commentDTO) {
+        commentDTO.setPostId(postId);
+        boardService.addNewComment(commentDTO);
+        return "redirect:/post/" + postId;
+    }
+        /*comment수정*/
+    @PostMapping("/update/{commentId}")
+    public String handleCommentUpdate(@PathVariable int commentId,
+                                   @ModelAttribute CommentDTO commentDTO) {
+        commentDTO.setCommentId(commentId);
+        int postId= boardService.findoneComment(commentId).getPostId();
+        boardService.updateComment(commentDTO);
+        return "redirect:/post/" + postId;
+    }
+        /*comment삭제*/
+    @PostMapping("/delete/{commentId}")
+    public String handleCommentDelete(@PathVariable int commentId,
+                                      @ModelAttribute CommentDTO commentDTO) {
+        commentDTO.setCommentId(commentId);
+        int postId= boardService.findoneComment(commentId).getPostId();
+        boardService.deleteComment(commentDTO);
+        return "redirect:/post/" + postId;
+    }
+
+    }
