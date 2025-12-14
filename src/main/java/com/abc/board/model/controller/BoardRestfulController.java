@@ -1,7 +1,6 @@
 package com.abc.board.model.controller;
 
 import com.abc.board.model.dto.BoardDTO;
-import com.abc.board.model.dto.PostDTO;
 import com.abc.board.service.BoardService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +9,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/boards")
+@RequestMapping("/boards")
 public class BoardAPIController {
 
     private final BoardService boardService;
